@@ -17,13 +17,30 @@ def fetch_advice():
         advice_data = response.json()
         return advice_data["slip"]["advice"]
     except requests.exceptions.RequestException as e:
-        return f"Error fetching advice: {e}"
+        return None, f"Error fetching advice: {e}"
 
 # Streamlit App
 st.title("Random Advice Generator 💡")
 st.write("Click the button below to get a random piece of advice.")
 
+# State to hold the current advice
+if "advice" not in st.session_state:
+    st.session_state.advice = ""
+
+# Fetch advice button
 if st.button("Get Advice"):
-    advice = fetch_advice()
+    with st.spinner("Fetching advice..."):
+        advice, error = fetch_advice()
+        if error:
+            st.error("Failed to fetch advice. Please try again later.")
+        else:
+            st.session_state.advice = advice
+
+# Clear advice button
+if st.button("Clear Advice"):
+    st.session_state.advice = ""
+
+# Display the advice
+if st.session_state.advice:
     st.subheader("Here's your advice:")
-    st.write(f"💬 *{advice}*")
+    st.write(f"💬 *{st.session_state.advice}*")
