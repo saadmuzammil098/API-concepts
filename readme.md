@@ -11,3 +11,8 @@ This project is a simple web app that fetches random advice from the free [Advic
    ```bash
    git clone <repository-url>
    cd advice_app
+
+## Requirements
+- Python 3.7+
+- Streamlit
+- Requests
